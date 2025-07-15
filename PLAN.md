@@ -62,13 +62,17 @@ graph TD
 This plan is broken down into logical phases, starting with foundational setup and progressing through development, security, automation, and deployment.
 
 ### Phase 1: Foundation & Project Setup
-- [ ] 1. Initialize a monorepo for the project using Git for version control.
-- [ ] 2. Set up the project structure with separate directories for `frontend`, `backend`, and `infrastructure`.
+- [x] 1. Initialize a monorepo for the project using Git for version control.
+- [x] 2. Set up the project structure with separate directories for `frontend`, `backend`, and `infrastructure`.
 
 ### Phase 2: Backend - Microservices & Infrastructure
-- [ ] 3. Provision a managed Kubernetes cluster (e.g., OKE, EKS, GKE) for container orchestration.
-- [ ] 4. Define the schema and provision a managed Converged Database (e.g., Oracle Autonomous Database, Aurora) to support various data models (relational, JSON, graph).
-- [ ] 5. Develop the first microservice (e.g., 'User Service') using a lightweight framework like Helidon or Micronaut.
+- [x] 3. Set up a Kubernetes cluster for container orchestration.
+  - For local development, enable the Kubernetes cluster included with Docker Desktop.
+  - For production, the plan is to provision a managed Kubernetes cluster (e.g., OKE, EKS, GKE) using the Infrastructure as Code scripts from Phase 5.
+- [x] 4. Set up a database.
+  - For local development, run PostgreSQL in a Docker container.
+  - For production, the plan is to provision a managed Converged Database (e.g., Oracle Autonomous Database, Aurora) to support various data models (relational, JSON, graph).
+- [ ] 5. Develop the first microservice (e.g., 'User Service') using Nest.JS.
 - [ ] 6. Containerize the 'User Service' using Docker.
 - [ ] 7. Implement a caching layer using a managed service like Redis for performance.
 - [ ] 8. Set up managed Object Storage for storing large files and user uploads.
