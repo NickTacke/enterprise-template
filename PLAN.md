@@ -83,8 +83,9 @@ This plan is broken down into logical phases, starting with foundational setup a
 
 ### Phase 3: Frontend - Single-Page Application (SPA)
 
-- [ ] 9. Develop the SPA frontend using a modern framework like React or Angular.
+- [x] 9. Develop the SPA frontend using a modern framework like Next.js.
 - [ ] 10. Configure the frontend to be served from a CDN with Object Storage as the origin for low-latency delivery.
+  - **Note:** This is a production deployment pattern. The implementation will be handled by the CI/CD pipeline in Phase 5. For local development, we will continue to use the Next.js dev server.
 
 ## Frontend-Backend Communication Flow
 
@@ -110,8 +111,33 @@ sequenceDiagram
     API Gateway-->>-Browser: 200 OK (User Data)
 ```
 
+The following diagram illustrates the network architecture, showing how the API Gateway acts as a single entry point to the backend services.
+
+```mermaid
+graph TD
+    subgraph "Publicly Accessible"
+        Frontend("Frontend App<br>localhost:3001")
+    end
+
+    subgraph "Docker Network (Internal)"
+        APIGateway("API Gateway (Kong)<br>localhost:8000")
+        UserService("User Service<br>Internal Port 3000")
+        Database("PostgreSQL DB")
+        Cache("Redis Cache")
+    end
+
+    Frontend --> |1. API Request| APIGateway
+    APIGateway --> |2. Route to Service| UserService
+    UserService --> |3. DB Query| Database
+    UserService --> |4. Cache Check| Cache
+
+    style Frontend fill:#cde4ff
+    style APIGateway fill:#90ee90
+```
+
 ### Phase 4: API, Security & Communication
-- [ ] 11. Define the API contracts for all microservices using the OpenAPI specification.
+
+- [x] 11. Define the API contracts for all microservices using the OpenAPI specification.
 - [ ] 12. Configure an API Gateway to manage, secure, and route API requests to the appropriate microservices.
 - [ ] 13. Implement a Web Application Firewall (WAF) to protect against common web exploits.
 - [ ] 14. Set up an Identity Provider (e.g., OCI IAM, Auth0) for user authentication and authorization (OAuth 2.0/OIDC).
