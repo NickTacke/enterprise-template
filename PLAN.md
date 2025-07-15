@@ -72,14 +72,43 @@ This plan is broken down into logical phases, starting with foundational setup a
 - [x] 4. Set up a database.
   - For local development, run PostgreSQL in a Docker container.
   - For production, the plan is to provision a managed Converged Database (e.g., Oracle Autonomous Database, Aurora) to support various data models (relational, JSON, graph).
-- [ ] 5. Develop the first microservice (e.g., 'User Service') using Nest.JS.
-- [ ] 6. Containerize the 'User Service' using Docker.
-- [ ] 7. Implement a caching layer using a managed service like Redis for performance.
-- [ ] 8. Set up managed Object Storage for storing large files and user uploads.
+- [x] 5. Develop the first microservice (e.g., 'User Service') using Nest.JS.
+- [x] 6. Containerize the 'User Service' using Docker.
+- [x] 7. Implement a caching layer using Redis.
+  - For local development, this is now running via Docker Compose.
+  - For production, the plan is to provision a managed Redis service (e.g., OCI Cache, ElastiCache).
+- [x] 8. Set up Object Storage using MinIO.
+  - For local development, this is now running via Docker Compose.
+  - For production, the plan is to provision a managed Object Storage service (e.g., OCI Object Storage, S3).
 
 ### Phase 3: Frontend - Single-Page Application (SPA)
+
 - [ ] 9. Develop the SPA frontend using a modern framework like React or Angular.
 - [ ] 10. Configure the frontend to be served from a CDN with Object Storage as the origin for low-latency delivery.
+
+## Frontend-Backend Communication Flow
+
+The following diagram shows the sequence of events for a typical API request, such as fetching user data. It illustrates how the backend service first attempts to retrieve data from the cache to improve performance before falling back to the primary database.
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant API Gateway
+    participant User Service
+    participant Redis Cache
+    participant PostgreSQL DB
+
+    Browser->>+API Gateway: GET /api/users/123
+    API Gateway->>+User Service: GET /users/123
+    User Service->>+Redis Cache: GET user:123
+    Redis Cache-->>-User Service: Not Found (Cache Miss)
+    User Service->>+PostgreSQL DB: SELECT * FROM users WHERE id=123;
+    PostgreSQL DB-->>-User Service: User Data
+    User Service->>+Redis Cache: SET user:123 (user data)
+    Redis Cache-->>-User Service: OK
+    User Service-->>-API Gateway: 200 OK (User Data)
+    API Gateway-->>-Browser: 200 OK (User Data)
+```
 
 ### Phase 4: API, Security & Communication
 - [ ] 11. Define the API contracts for all microservices using the OpenAPI specification.
