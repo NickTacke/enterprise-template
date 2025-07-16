@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "3000:3000"
+    networks:
+      - enterprise-template-net
+
+networks:
+  enterprise-template-net:
+    external: true
+    name: infrastructure_enterprise-template-net 
